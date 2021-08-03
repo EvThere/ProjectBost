@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e968645127e612a48a195fb1c2172664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelLoadDelay: 2
 --- !u!1 &240490540
 GameObject:
   m_ObjectHideFlags: 0

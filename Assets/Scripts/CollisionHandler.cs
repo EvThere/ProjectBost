@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
-    private void OnCollisionEnter(Collision collision)
+    [SerializeField] float levelLoadDelay = 2f;
+
+    void OnCollisionEnter(Collision collision)
     {
         switch (collision.gameObject.tag)
         {
@@ -11,30 +14,45 @@ public class CollisionHandler : MonoBehaviour
                 Debug.Log("This thing is friendly");
                 break;
             case "Finish":
-                LoadNextLevel();
+                StartSuccessSequence();
                 break;
             default:
-                ReloadLevel();
+                StartCrashSequence();
                 break;
-
         }
+    }
 
-        void ReloadLevel()
+    void StartSuccessSequence()
+    {
+        // todo add SFX upon crash
+        // todo add particle effect upon crash
+        GetComponent<Movement>().enabled = false;
+        Invoke("LoadNextLevel", levelLoadDelay);
+    }
+
+    void StartCrashSequence()
+    {
+        // todo add SFX upon crash
+        // todo add particle effect upon crash
+        GetComponent<Movement>().enabled = false;
+        Invoke("ReloadLevel", levelLoadDelay);
+    }
+
+    void LoadNextLevel()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
         {
-            int  currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene (currentSceneIndex);
+            nextSceneIndex = 0;
         }
+        SceneManager.LoadScene(nextSceneIndex);
+    }
 
-        void LoadNextLevel()
-        {
-            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-            int nextSceneIndex = currentSceneIndex + 1;
-            if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
-            {
-                nextSceneIndex = 0;
-            }
-            SceneManager.LoadScene(nextSceneIndex);
-        }
+    void ReloadLevel()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex);
     }
 
 }
